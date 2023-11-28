@@ -1,0 +1,106 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <title>watch {{movie.title}}</title>
+</head>
+<body>
+  <h1>{{movie.title}}</h1>
+  <div class="movie-player">
+    <iframe id="iframe-embed" width="100%" height="500" scrolling="no" frameborder="0" src="https://autoembed.to/movie/imdb/{{movie.imdb_id}}" allowfullscreen="allowfullscreen" webkitallowfullscreen="true" mozallowfullscreen="true" sandbox="allow-same-origin allow-scripts"></iframe>
+  </div>
+  <div class="movie-infos">
+    <p>
+      {{movie.genres}}
+    </p>
+    <p>
+      {{movie.overview}}
+    </p>
+  </div>  
+  <div class= "param" style="display: block;">
+    <div class="prev-next" style="display: flex;">
+      <button id="prev-server-button" style="color: black;">Previous Server</button>
+      <button id="next-server-button" style="color: black;">Next Server</button>
+    </div>
+    <div>
+      <!-- Rounded switch -->
+    <label class="switch">
+      <input type="checkbox" id="sandbox-toggle">
+      <span class="slider round"></span>
+    </label>
+    </div>
+    <a href="{% url 'movies_list' %}">Go back</a>
+
+  </div>
+  
+  <script>
+    // Replace the following array with your server links for the movie
+    var serverLinks = [
+      "https://remotestre.am/e/?imdb={{movie.imdb_id}}",
+      "https://embed.smashystream.com/playere.php?imdb={{movie.imdb_id}}",
+      "https://vidsrc.me/embed/movie?imdb={{movie.imdb_id}}",
+      "https://multiembed.mov/?video_id={{movie.imdb_id}}",
+      "https://www.2embed.cc/embed/{{movie.imdb_id}}",
+      "https://embed.smashystream.com/playere.php?imdb={{movie.imdb_id}}",
+      "https://autoembed.to/movie/imdb/{{movie.imdb_id}}"
+      // Add more server links as needed
+    ];
+
+    var currentServerIndex = 0; // Start with the first server link
+
+    function updateIframeSource() {
+      var movieUrl = serverLinks[currentServerIndex];
+      var iframe = document.getElementById('iframe-embed');
+      iframe.setAttribute('src', movieUrl); // Update the iframe's src attribute
+    }
+
+    document.getElementById('prev-server-button').addEventListener('click', function() {
+      currentServerIndex = (currentServerIndex - 1 + serverLinks.length) % serverLinks.length;
+      updateIframeSource();
+    });
+
+    document.getElementById('next-server-button').addEventListener('click', function() {
+      currentServerIndex = (currentServerIndex + 1) % serverLinks.length;
+      updateIframeSource();
+    });
+
+     // Function to reload the iframe
+  function reloadIframe() {
+    var iframe = document.getElementById('iframe-embed');
+    iframe.src = iframe.src; // Reload the iframe's src
+  }
+
+    // Toggle the switch state and update local storage
+    function toggleSwitch() {
+      var iframe = document.getElementById('iframe-embed');
+      if (iframe.hasAttribute('sandbox')) {
+        iframe.removeAttribute('sandbox');
+        localStorage.setItem('sandboxSwitchState', 'off');
+      } else {
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+        localStorage.setItem('sandboxSwitchState', 'on');
+      }
+
+      // Reload the iframe after toggling the switch
+      reloadIframe();
+    }
+
+    document.getElementById('prev-server-button').addEventListener('click', function() {
+      currentServerIndex = (currentServerIndex - 1 + serverLinks.length) % serverLinks.length;
+      updateIframeSource();
+    });
+
+    document.getElementById('next-server-button').addEventListener('click', function() {
+      currentServerIndex = (currentServerIndex + 1) % serverLinks.length;
+      updateIframeSource();
+    });
+
+    document.getElementById('sandbox-toggle').addEventListener('click', toggleSwitch);
+</script>
+
+</body>
+</html>

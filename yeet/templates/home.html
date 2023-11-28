@@ -1,0 +1,85 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <title>yeet</title>
+    <script src="script.js"></script>
+    <style>
+        .main_search{
+        width: 200px;
+        height: 50px;
+        font-weight: 400;
+        border-radius: 5px;
+        padding-left: 20px;
+        padding-right: 100px;
+        font-size: 16px;
+        border: none !important;
+        }
+        .header{
+            background-color: aliceblue;
+            height: 50px;
+        }
+
+
+        .logo {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
+        height: auto;
+        width: auto;
+        max-height: 220px; /* Set a maximum height for the image */
+        max-width: 100%; /* Ensure the image doesn't exceed the width of the div */
+    }
+
+    .logo-img {
+        height: auto;
+        max-height: 220px; /* Set a maximum height for the image */
+        max-width: 100%; 
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+
+
+</head>
+<body>
+    <div class="home-container">
+        <video autoplay muted loop id="background-video">
+            <source src="{% static 'media/vintage.mp4' %}" type="video/mp4">
+            <!-- You can add additional <source> elements for other video formats (e.g., WebM, Ogg) -->
+        </video>
+        <div class="content" style="display: block;">
+            <div class="header">
+             
+                <a style="color: black;" href="{% url 'movies_list' %}">Movies</a>
+            </div>
+
+            <div class="container" style="display: block;">
+                <div class="logo">
+                    <img class="logo-img" src="{% static 'media/yeet.png' %}" alt="logo">
+                </div>
+                <div class="search-container">
+                    <div class="search">
+                        <!-- Add the search form -->
+                        <form method="GET" action="{% url 'search_movies' %}">
+                            <input class="main_search" type="text" name="q" id="search-input" placeholder="Search movies..." value="{{ request.GET.q }}" style="color: black;">
+                            <input type="submit" value="Search" style="color: black;">
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+           
+        </div>
+    </div>
+    
+    
+</body>
+</html>

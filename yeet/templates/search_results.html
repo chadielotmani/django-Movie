@@ -1,0 +1,77 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <title>Movies List</title>
+</head>
+<body>
+  <h1>Search results for: "{{ search_query }}"</h1>
+  <div class="search">
+    <!-- Add the search form -->
+    <form method="GET" action="{% url 'search_movies' %}">
+        <input type="text" name="q" id="search-input" placeholder="Search movies..." value="{{ request.GET.q }}" style="color: black;">
+        <input type="submit" value="Search" style="color: black;">
+    </form>
+</div>
+  <div class="movie_list">
+    <ul>
+      <div  class="movies-div-container">
+        {% for movie in movies %}
+     
+        <div class="movie">
+          <a href="{% url 'watch_movie'  imdb_id=movie.imdb_id %}"> 
+            <div class="img_container">
+              {% if movie.poster %}
+              <img class="movie_img" src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/{{movie.poster}}" alt="movie poster">
+            {% else %}
+              <img class="movie_img" src="{% static 'media/yeet_poster.png' %}" alt="default poster">
+            {% endif %}
+            </div>
+            <div class="movie_details">
+              <div class="movie_title">
+                {{ movie.title }}
+              </div>
+              <div class="genres">
+                {{movie.genres}}
+              </div>
+              <div class="release_date">
+                {{movie.release_date}}
+              </div>
+              
+            </div>
+            
+          </a> 
+        </div>
+        
+        
+      
+      {% endfor %}
+      </div>
+      
+    </ul>
+
+<div class="prev-next" style="display: flex;">
+     <!-- Add the "Previous" button -->
+     {% if page_obj.has_previous %}
+     <div class="pagination button">
+       <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+     </div>
+     {% endif %}
+   
+   
+       <!-- Add the "Next" button -->
+     {% if page_obj.has_next %}
+     <div class="pagination button">
+       <a href="?page={{ page_obj.next_page_number }}">Next</a>
+     </div>
+     {% endif %}
+</div>
+   
+
+  
+</body>
+</html>
